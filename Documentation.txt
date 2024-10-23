@@ -1,4 +1,119 @@
-url:
-method:
-body:
-response:
+1. MongoDB Collections:
+    a.transactions
+        Fields:
+        type (String) - Transaction type (e.g., "income" or "expense")
+        category (String) - Transaction category (e.g., "salary", "rent")
+        amount (Number) - Amount of the transaction
+        date (Date) - Date of the transaction
+        description (String) - Description of the transaction
+    b.categories
+        Fields:
+        name (String) - Name of the category (e.g., "groceries", "utilities")
+        type (String) - Type of category (e.g., "income" or "expense")
+2. API Endpoints:
+
+    #Create a new Transaction
+    POST /transactions
+    Description: Adds a new transaction (income or expense).
+    Request Body: json
+                {
+                "type": "income",
+                "category": "salary",
+                "amount": 5000,
+                "date": "2024-10-22",
+                "description": "Monthly salary"
+                }
+    Response:
+            201 Created: json{ message: 'Transaction Created successfully' }
+            400 Bad Request: Invalid request parameters.
+
+    #Get all Transactions
+    GET /transactions
+    Description: Retrieves all transactions.
+    Query Parameters: limit, sort, skip - pagination
+    
+    Response: 200 OK:json
+            [
+            {
+                "_id": "transactionId123",
+                "type": "income",
+                "category": "salary",
+                "amount": 5000,
+                "date": "2024-10-22",
+                "description": "Monthly salary"
+            },
+            {
+                "_id": "transactionId456",
+                "type": "expense",
+                "category": "rent",
+                "amount": 1000,
+                "date": "2024-10-20",
+                "description": "House rent"
+            }
+            ]
+
+    #Get Transaction By ID
+    GET /transactions/ID
+    Description: Retrieves a transaction by ID.
+    Path Parameter: id - The ID of the transaction.
+    Response: 200 OK:json
+
+            {
+            "_id": "transactionId123",
+            "type": "income",
+            "category": "salary",
+            "amount": 5000,
+            "date": "2024-10-22",
+            "description": "Monthly salary"
+            }
+    Error:  404 Not Found: Transaction with the given ID not found.
+    
+    #Update a Transaction based on the ID
+    PUT /transactions/ID
+    Description: Updates a transaction by ID.
+    Path Parameter: id - The ID of the transaction.
+    Request Body: json
+
+                {
+                "type": "expense",
+                "category": "rent",
+                "amount": 1200,
+                "date": "2024-10-23",
+                "description": "Updated house rent"
+                }
+                Response: 200 OK:json
+                {
+                "_id": "transactionId456",
+                "type": "expense",
+                "category": "rent",
+                "amount": 1200,
+                "date": "2024-10-23",
+                "description": "Updated house rent"
+                }
+                400 Bad Request: Invalid request body.
+                404 Not Found: Transaction with the given ID not found.
+
+    #Delete Transaction By ID
+    DELETE /transactions/ID
+    Description: Deletes a transaction by ID.
+    Path Parameter: id - The ID of the transaction.
+    Response:
+            200 OK: Transaction successfully deleted.
+            404 Not Found: Transaction with the given ID not found.
+            
+    # Get Summary
+    GET /summary
+    Description: Retrieves a summary of transactions, including total income, total expenses, and balance. Optionally filter by date range or category.
+            
+    Response: 200 OK: json
+                    {
+                    "totalIncome": 10000,
+                    "totalExpenses": 3000,
+                    "balance": 7000
+                    }
+3. Error Handling:
+    Invalid Transaction ID:
+        400 Bad Request: When the provided ID is not in the correct format.
+        404 Not Found: If a transaction with the given ID does not exist.
+    Invalid Input Data:
+        400 Bad Request: When required fields are missing or the data type is incorrect.

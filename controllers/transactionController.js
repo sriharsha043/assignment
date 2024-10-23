@@ -7,7 +7,7 @@ exports.createTransaction = async (req, res) => {
 	try {
 		const newTransaction = new Transaction(req.body);
 		await newTransaction.save();
-		res.status(201).json(newTransaction);
+		res.status(201).json({ message: 'Transaction Created Successfully' })
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
@@ -42,7 +42,7 @@ exports.updateTransaction = async (req, res) => {
 	try {
 		const transaction = await Transaction.findByIdAndUpdate(id, req.body, { new: true });
 		if (!transaction) return res.status(404).json({ error: 'Transaction not found' });
-		res.status(200).json(transaction);
+		res.status(200).json({ message: 'Transaction Updated Successfully' });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
